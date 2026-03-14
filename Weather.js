@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import axios from "axios";
 import "./Weather.css";
 
 function Weather() {
@@ -11,82 +10,100 @@ function Weather() {
 
   const API_KEY = "d3fac8eb9c4d9d2f03c0f43fbfb722a5";
 
-  const fetchWeather = async () => {
+  const fetchWeather = () => {
 
     if (!city) {
       setError("Please enter a city name");
       return;
     }
-    try {
 
-      setError("");
-      /* AJAX REQUEST (Current Weather) */
+    setError("");
 
-      const request = new XMLHttpRequest();
+    /* =========================
+       AJAX REQUEST (CURRENT WEATHER)
+    ========================= */
 
-      const url = `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${API_KEY}&units=metric`;
+    const currentRequest = new XMLHttpRequest();
 
-      request.open("GET", url, true);
+    const currentURL =
+      `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${API_KEY}&units=metric`;
 
-      request.onload = function () {
+    currentRequest.open("GET", currentURL, true);
 
-        if (request.status === 200) {
+    currentRequest.onload = function () {
 
-          const data = JSON.parse(request.responseText);
-          setWeather(data);
+      if (currentRequest.status === 200) {
 
-        } else {
+        const data = JSON.parse(currentRequest.responseText);
+        setWeather(data);
 
-          setError("City not found");
-          setWeather(null);
+      } else {
 
-        }
+        setError("City not found");
+        setWeather(null);
 
-      };
+      }
 
-      request.onerror = function () {
-        setError("Network error");
-      };
+    };
 
-      request.send();
+    currentRequest.onerror = function () {
+      setError("Network error");
+    };
+
+    currentRequest.send();
 
 
-      const current = await axios.get(
-        `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${API_KEY}&units=metric`
-      );
 
-      const forecastData = await axios.get(
-        `https://api.openweathermap.org/data/2.5/forecast?q=${city}&appid=${API_KEY}&units=metric`
-      );
+    /* =========================
+       AJAX REQUEST (FORECAST)
+    ========================= */
 
-      setWeather(current.data);
+    const forecastRequest = new XMLHttpRequest();
 
-      // get first forecast entry for each day
-      const dailyForecast = [];
-      const usedDates = [];
+    const forecastURL =
+      `https://api.openweathermap.org/data/2.5/forecast?q=${city}&appid=${API_KEY}&units=metric`;
 
-      forecastData.data.list.forEach((item) => {
+    forecastRequest.open("GET", forecastURL, true);
 
-        const date = item.dt_txt.split(" ")[0];
+    forecastRequest.onload = function () {
 
-        if (!usedDates.includes(date)) {
-          usedDates.push(date);
-          dailyForecast.push(item);
-        }
+      if (forecastRequest.status === 200) {
 
-      });
+        const forecastData = JSON.parse(forecastRequest.responseText);
 
-      // store today + next 5 days
-      setForecast(dailyForecast.slice(0,6));
+        const dailyForecast = [];
+        const usedDates = [];
 
-    } catch (err) {
+        forecastData.list.forEach((item) => {
 
-      setError("City not found or API error");
-      setWeather(null);
-      setForecast([]);
+          const date = item.dt_txt.split(" ")[0];
 
-    }
+          if (!usedDates.includes(date)) {
+            usedDates.push(date);
+            dailyForecast.push(item);
+          }
+
+        });
+
+        setForecast(dailyForecast.slice(0,6));
+
+      } else {
+
+        setError("Forecast API error");
+        setForecast([]);
+
+      }
+
+    };
+
+    forecastRequest.onerror = function () {
+      setError("Network error");
+    };
+
+    forecastRequest.send();
+
   };
+
 
   const handleSearch = (e) => {
     e.preventDefault();
@@ -140,7 +157,7 @@ function Weather() {
       {forecast.length > 0 && (
         <div>
 
-          <h3>Next 5 Days Weather Forecast</h3>
+          <h3>Next 5 Days Forecast</h3>
           <div className="forecast-container">
 
           {forecast.slice(1,6).map((item,index)=>{
@@ -158,18 +175,22 @@ function Weather() {
             return(
 
               <div key={index} style={{border:"1px solid gray",margin:"10px",padding:"10px"}}>
-<div className="forecast-card">
-  <div className="forecast-card-inner">
-                <h4>{day}</h4>
 
-                <p><strong>Date: </strong> {date}</p>
+                <div className="forecast-card">
+                  <div className="forecast-card-inner">
 
-                <p><strong>Temperature: </strong> {item.main.temp} °C</p>
-                <p><strong>Humidity: </strong> {item.main.humidity}%</p>
-                <p><strong>Condition: </strong>{item.weather[0].description}</p>
-</div>
+                    <h4>{day}</h4>
+
+                    <p><strong>Date: </strong> {date}</p>
+                    <p><strong>Temperature: </strong> {item.main.temp} °C</p>
+                    <p><strong>Humidity: </strong> {item.main.humidity}%</p>
+                    <p><strong>Condition: </strong>{item.weather[0].description}</p>
+
+                  </div>
+                </div>
+
               </div>
-</div>
+
             )
 
           })}
