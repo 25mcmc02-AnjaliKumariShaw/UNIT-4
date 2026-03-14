@@ -1,0 +1,92 @@
+/* Weather.css */
+
+/* Page background */
+body{
+  margin:0;
+  font-family: Arial, Helvetica, sans-serif;
+  background: linear-gradient(to right,#cbe7f2,#2fd1f2);
+}
+
+/* Main container */
+.weather-container{
+  text-align:center;
+  padding:30px;
+}
+
+/* Title */
+h1{
+  color:#1b1b1b;
+  margin-bottom:20px;
+}
+
+/* Search box */
+input{
+  padding:8px;
+  border-radius:6px;
+  border:1px solid #ccc;
+}
+
+button{
+  padding:8px 15px;
+  margin-left:8px;
+  border:none;
+  border-radius:6px;
+  background:#4CAF50;
+  color:white;
+  cursor:pointer;
+}
+
+button:hover{
+  background:#3e8e41;
+}
+
+/* Today weather box */
+.today-weather{
+  background:white;
+  width:280px;
+  margin:20px auto;
+  padding:20px;
+  border-radius:10px;
+  box-shadow:0 4px 10px rgba(0,0,0,0.15);
+}
+
+/* Forecast title */
+h3{
+  margin-top:30px;
+  color:#222;
+}
+
+/* Forecast container */
+.forecast-container{
+  display:flex;
+  justify-content:center;
+  gap:20px;
+  margin-top:25px;
+}
+
+/* Forecast cards */
+.forecast-card{
+  background:white;
+  padding:20px;
+  width:180px;
+  border-radius:12px;
+  box-shadow:0 4px 12px rgba(0,0,0,0.15);
+  transition:0.3s;
+}
+
+/* Hover effect */
+.forecast-card:hover{
+  transform:translateY(-5px);
+}
+
+/* Day heading */
+.forecast-card h4{
+  color:#2a6df4;
+  margin-bottom:5px;
+}
+
+/* Text style */
+.forecast-card p{
+  margin:5px 0;
+  color:#444;
+}
