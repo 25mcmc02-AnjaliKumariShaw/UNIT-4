@@ -21,6 +21,36 @@ function Weather() {
     try {
 
       setError("");
+      /* AJAX REQUEST (Current Weather) */
+
+      const request = new XMLHttpRequest();
+
+      const url = `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${API_KEY}&units=metric`;
+
+      request.open("GET", url, true);
+
+      request.onload = function () {
+
+        if (request.status === 200) {
+
+          const data = JSON.parse(request.responseText);
+          setWeather(data);
+
+        } else {
+
+          setError("City not found");
+          setWeather(null);
+
+        }
+
+      };
+
+      request.onerror = function () {
+        setError("Network error");
+      };
+
+      request.send();
+
 
       const current = await axios.get(
         `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${API_KEY}&units=metric`
@@ -111,7 +141,7 @@ function Weather() {
       {forecast.length > 0 && (
         <div>
 
-          <h3>Next 5 Days Forecast</h3>
+          <h3>Next 5 Days Weather Forecast</h3>
           <div className="forecast-container">
 
           {forecast.slice(1,6).map((item,index)=>{
