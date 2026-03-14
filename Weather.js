@@ -17,7 +17,6 @@ function Weather() {
       setError("Please enter a city name");
       return;
     }
-
     try {
 
       setError("");
